@@ -58,7 +58,7 @@ workflows:
             - build
       - docker/publish:
           name: containerize
-          image: chrisopenclass/Python-OC-Lettings-FR-master
+          image: cimg/python:3.10.5
           tag: $CIRCLE_SHA1
           requires:
             - build
