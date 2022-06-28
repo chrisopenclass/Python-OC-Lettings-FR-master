@@ -43,8 +43,8 @@ jobs:
       - heroku/install
       # Deploy app to Heroku
       - heroku/deploy-via-git:
-          app-name: $HEROKU_APP_NAME
-          api-key: HEROKU_API_KEY
+          app-name: APP_NAME
+          api-key: API_KEY
 
 workflows:
   main:
