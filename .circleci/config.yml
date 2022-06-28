@@ -58,7 +58,7 @@ workflows:
             - build
       - docker/publish:
           name: containerize
-          image: lapinator1593/oc-learning
+          image: lapinator1593/oc-learning:latest
           tag: $CIRCLE_SHA1
           requires:
             - build
