@@ -1,62 +1,75 @@
 version: 2.1
 
-orbs: 
-  heroku: circleci/heroku@1.2.6
+description: Workflow de build, test, linting, conteneurisation et déploiement.
+
+display:
+  source_url: https://github.com/jpvincent1980/P13
+
+orbs:
+  python: circleci/python@0.3.2
   docker: circleci/docker@2.0.1
+  heroku: circleci/heroku@1.2.6
+
+jobs:
+  build:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+
+  test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - run:
+          command: python -m pytest
+
+  lint:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - run:
+          command: python -m flake8
+
+  deploy:
+    executor: heroku/default
+    steps:
+      - checkout
+      # Install Heroku if not already installed
+      - heroku/install
+      # Deploy app to Heroku
+      - heroku/deploy-via-git:
+          app-name: $HEROKU_APP_NAME
+          api-key: HEROKU_API_KEY
 
 workflows:
-  deploy:
+  main:
     jobs:
-      - build_and_test
-      - build_push_docker_hub:
+      - build
+      - test:
           requires:
-            - build_and_test
-     
-      - heroku/deploy-via-git:
+            - build
+      - lint:
           requires:
-            - build_and_test
-            - build_push_docker_hub   
+            - build
+      - docker/publish:
+          name: containerize
+          image: jpvincent1980/p13
+          tag: $CIRCLE_SHA1
+          requires:
+            - build
+            - test
+            - lint
           filters:
-           branches:
-             only: master
-          pre-steps:
-            - heroku/install
-            - run:
-                command: |
-                  heroku config:set SENTRY_URL=$SENTRY_URL -a oc-lettings-oc
-                  heroku config:set SECRET_KEY=$SECRET_KEY -a oc-lettings-oc
-                  heroku config:set DATABASE_URL=$DATABASE_URL -a oc-lettings-oc
-                  heroku config:set SQLITE_URL=$SQLITE_URL -a oc-lettings-oc
-              
-jobs:
-  build_and_test:
-    docker:
-      - image: cimg/python:3.10.1
-    steps:
-      - checkout
-      - run:
-          name: Install Django and dependencies
-          command: |
-           pip install -r requirements.txt
-      - run:
-          name: Run tests and linting
-          command: |
-            pytest
-            flake8
-  build_push_docker_hub:
-    docker:
-      - image: cimg/python:3.10.1
-    steps:
-      - setup_remote_docker
-      - checkout
-      - docker/check
-      - docker/build:
-          image: $DOCKER_LOGIN/oc-lettings
-          extra_build_args: "-t $DOCKER_LOGIN/oc-lettings"
-          tag: $CIRCLE_SHA1
-      - docker/push:
-          image: $DOCKER_LOGIN/oc-lettings
-          tag: "latest"
-      - docker/push:
-          image: $DOCKER_LOGIN/oc-lettings
-          tag: $CIRCLE_SHA1
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - containerize
+          filters:
+            branches:
+              only: main
