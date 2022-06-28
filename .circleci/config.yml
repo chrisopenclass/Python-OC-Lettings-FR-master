@@ -3,7 +3,7 @@ version: 2.1
 description: Workflow de build, test, linting, conteneurisation et déploiement.
 
 display:
-  source_url: https://github.com/jpvincent1980/P13
+  source_url: https://github.com/chrisopenclass/Python-OC-Lettings-FR-master
 
 orbs:
   python: circleci/python@0.3.2
@@ -58,7 +58,7 @@ workflows:
             - build
       - docker/publish:
           name: containerize
-          image: jpvincent1980/p13
+          image: chrisopenclass/Python-OC-Lettings-FR-master
           tag: $CIRCLE_SHA1
           requires:
             - build
