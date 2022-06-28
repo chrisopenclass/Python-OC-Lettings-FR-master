@@ -59,9 +59,6 @@ workflows:
       - docker/publish:
           name: containerize
           image: lapinator1593/oc-learning
-          auth:
-            username: user
-            password: password
           requires:
             - build
             - test
