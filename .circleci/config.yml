@@ -1,7 +1,7 @@
 version: 1.0
 
- orbs:
-  aws-s3: circleci/aws-s3@x.y.z # use the AWS S3 orb in your config
+orbs: 
+  docker: circleci/docker@2.1.2
 
  workflows: # Define a Workflow running the build job, then the deploy job
   version: 2
