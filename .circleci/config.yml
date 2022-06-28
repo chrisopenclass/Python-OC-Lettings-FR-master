@@ -3,7 +3,7 @@ version: 2.1
 orbs: 
   docker: circleci/docker@2.1.2
 
- workflows: # Define a Workflow running the build job, then the deploy job
+workflows: # Define a Workflow running the build job, then the deploy job
   version: 2
     build-deploy: # Make a workflow to build and deploy your project
       jobs:
@@ -15,14 +15,14 @@ orbs:
              branches:
                only: main # Only deploy when the commit is on the Main branch
 
- jobs: # Define the build and deploy jobs
+jobs: # Define the build and deploy jobs
    build:
      docker: # Use the Docker executor for the build job
        - image: <image-name-and-tag> # Specify the Docker image to use for the build job
          auth:
            username: mydockerhub-user
            password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-   ... # build job steps omitted for brevity
+    # build job steps omitted for brevity
    deploy:
      docker: # Use the Docker executor for the deploy job
        - image: <image-name-and-tag>  # Specify the Docker image to use for the deploy job
