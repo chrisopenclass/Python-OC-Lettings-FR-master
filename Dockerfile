@@ -4,7 +4,7 @@
 FROM python:3.10-slim-buster
 
 # default path
-WORKDIR /oc_lettings
+WORKDIR /oc_lettings_site
 
 ENV PYTHONDONTWRITEBYTECODE=1
 # This keeps Python from buffering stdin/stdout
