@@ -1,40 +1,62 @@
 version: 2.1
 
 orbs: 
-  docker: circleci/docker@2.1.2
+  heroku: circleci/heroku@1.2.6
+  docker: circleci/docker@2.0.1
 
-workflows: # Define a Workflow running the build job, then the deploy job
-  version: 2
-    build-deploy: # Make a workflow to build and deploy your project
-      jobs:
-       - build
-       - deploy:
-           requires:
-             - build # Only run deploy job once the build job has completed
-           filters:
-             branches:
-               only: main # Only deploy when the commit is on the Main branch
-
-jobs: # Define the build and deploy jobs
-   build:
-     docker: # Use the Docker executor for the build job
-       - image: <image-name-and-tag> # Specify the Docker image to use for the build job
-         auth:
-           username: mydockerhub-user
-           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-    # build job steps omitted for brevity
-   deploy:
-     docker: # Use the Docker executor for the deploy job
-       - image: <image-name-and-tag>  # Specify the Docker image to use for the deploy job
-         auth:
-           username: mydockerhub-user
-           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-   steps:
-       - checkout
-       - aws-s3/sync:
-           from: bucket
-           to: 's3://my-s3-bucket-name/prefix'
-           arguments: | # Optional arguments
-             --acl public-read \
-             --cache-control "max-age=86400"
-           overwrite: true # default is false
+workflows:
+  deploy:
+    jobs:
+      - build_and_test
+      - build_push_docker_hub:
+          requires:
+            - build_and_test
+     
+      - heroku/deploy-via-git:
+          requires:
+            - build_and_test
+            - build_push_docker_hub   
+          filters:
+           branches:
+             only: master
+          pre-steps:
+            - heroku/install
+            - run:
+                command: |
+                  heroku config:set SENTRY_URL=$SENTRY_URL -a oc-lettings-oc
+                  heroku config:set SECRET_KEY=$SECRET_KEY -a oc-lettings-oc
+                  heroku config:set DATABASE_URL=$DATABASE_URL -a oc-lettings-oc
+                  heroku config:set SQLITE_URL=$SQLITE_URL -a oc-lettings-oc
+              
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/python:3.10.1
+    steps:
+      - checkout
+      - run:
+          name: Install Django and dependencies
+          command: |
+           pip install -r requirements.txt
+      - run:
+          name: Run tests and linting
+          command: |
+            pytest
+            flake8
+  build_push_docker_hub:
+    docker:
+      - image: cimg/python:3.10.1
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: $DOCKER_LOGIN/oc-lettings
+          extra_build_args: "-t $DOCKER_LOGIN/oc-lettings"
+          tag: $CIRCLE_SHA1
+      - docker/push:
+          image: $DOCKER_LOGIN/oc-lettings
+          tag: "latest"
+      - docker/push:
+          image: $DOCKER_LOGIN/oc-lettings
+          tag: $CIRCLE_SHA1
