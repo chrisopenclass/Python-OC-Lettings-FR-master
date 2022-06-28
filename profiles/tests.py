@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 @pytest.mark.django_db
 def test_Address_list_url():
-    path = reverse('profile_index')
+    path = reverse('profiles_index')
 
     assert path == '/profiles/'
     assert resolve(path).view_name == 'profiles_index'
