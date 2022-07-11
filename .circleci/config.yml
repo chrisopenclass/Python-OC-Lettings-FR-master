@@ -11,7 +11,7 @@ orbs:
   heroku: circleci/heroku@1.2.6
 
 executors:
-  docker-publisher:
+  dockerPublisher:
     environement:
       image_name: lapinator1593/oc-learning
     docker: 
@@ -46,7 +46,7 @@ jobs:
           command: python -m flake8
 
   docker-publisher:
-    executor: docker-publisher
+    executor: dockerPublisher
 
     steps:
       - checkout
