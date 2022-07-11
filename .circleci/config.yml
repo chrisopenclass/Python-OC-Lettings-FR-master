@@ -35,6 +35,19 @@ jobs:
       - run:
           command: python -m flake8
 
+  - docker/publish:
+    executors:
+      environement:
+        image_name: lapinator1593/oc-learning
+      docker: 
+        —image: cimg/python:3.10.1
+          auth:
+            username: user
+            password: password
+      filters:
+        branches:
+        only: main
+
   deploy:
     executor: heroku/default
     steps:
@@ -57,20 +70,10 @@ workflows:
           requires:
             - build
       - docker/publish:
-          name: containerize
-          image: lapinator1593/oc-learning
-          docker: 
-            — image: cimg/python:3.10.1
-            auth:
-              username: user
-              password: password
           requires:
             - build
             - test
             - lint
-          filters:
-            branches:
-              only: main
       - deploy:
           requires:
             - containerize
