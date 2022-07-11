@@ -15,7 +15,7 @@ executors:
     environement:
       image_name: lapinator1593/oc-learning
     docker: 
-      -image: cimg/python:3.10.5
+      - image: cimg/python:3.10.5
       auth:
         username: user
         password: password
