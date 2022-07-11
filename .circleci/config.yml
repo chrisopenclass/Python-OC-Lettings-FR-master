@@ -19,9 +19,6 @@ executors:
         auth:
           username: user
           password: password
-    filters:
-      branches:
-      only: main
 
 jobs:
   build:
@@ -59,6 +56,9 @@ jobs:
             echo "password" | docker login -u "user" --password-stdin
             docker build -t image_name .
             docker push image_name:latest
+      filters:
+        branches:
+        only: main
     
 
   deploy:
