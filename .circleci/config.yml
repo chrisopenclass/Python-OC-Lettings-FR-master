@@ -59,6 +59,7 @@ workflows:
       - docker/publish:
           name: containerize
           image: lapinator1593/oc-learning
+          — image: circleci/node:latest
             auth:
               username: $user
               password: $password
