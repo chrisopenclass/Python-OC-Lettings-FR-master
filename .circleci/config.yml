@@ -56,10 +56,6 @@ jobs:
             echo "password" | docker login -u "user" --password-stdin
             docker build -t image_name .
             docker push image_name:latest
-      - filters:
-          branches:
-          only: main
-    
 
   deploy:
     executor: heroku/default
