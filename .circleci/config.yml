@@ -54,11 +54,11 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-        name: publish to dockerhub
-        command: |
-          echo "password" | docker login -u "user" --password-stdin
-          docker build -t image_name .
-          docker push image_name:latest
+          name: publish to dockerhub
+          command: |
+            echo "password" | docker login -u "user" --password-stdin
+            docker build -t image_name .
+            docker push image_name:latest
     
 
   deploy:
