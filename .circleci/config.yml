@@ -45,7 +45,7 @@ jobs:
       - run:
           command: python -m flake8
 
-  docker-publish:
+  docker-publisher:
     executor: docker-publisher
 
     steps:
