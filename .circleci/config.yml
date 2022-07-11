@@ -53,11 +53,9 @@ jobs:
       - run:
           name: publish to dockerhub
           command: |
-            echo "password" | docker login -u "user" --password-stdin
+            echo ${user} | docker login -u ${password} --password-stdin
             docker build -t image_name .
             docker push image_name:latest
-            echo ${user}
-            echo ${password}
       - filters:
           branches:
           only: main
