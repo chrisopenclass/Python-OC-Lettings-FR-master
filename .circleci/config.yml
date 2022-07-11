@@ -19,6 +19,11 @@ executors:
         auth:
           username: user
           password: password
+      - run:
+        command: |
+          echo ${user}
+          echo ${password}
+
 
 jobs:
   build:
