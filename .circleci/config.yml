@@ -35,12 +35,12 @@ jobs:
       - run:
           command: python -m flake8
 
-  - docker/publish:
+  docker/publish:
     executors:
       environement:
         image_name: lapinator1593/oc-learning
       docker: 
-        —image: cimg/python:3.10.1
+        — image: cimg/python:3.10.1
           auth:
             username: user
             password: password
