@@ -43,8 +43,8 @@ jobs:
       - heroku/install
       # Deploy app to Heroku
       - heroku/deploy-via-git:
-          app-name: $APP_NAME
-          api-key: $API_KEY
+          app-name: APP_NAME
+          api-key: API_KEY
 
 workflows:
   main:
@@ -61,8 +61,8 @@ workflows:
           image: lapinator1593/oc-learning
           — image: circleci/node:latest
             auth:
-              username: $user
-              password: $password
+              username: user
+              password: password
           requires:
             - build
             - test
