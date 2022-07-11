@@ -17,8 +17,8 @@ executors:
     docker: 
       - image: cimg/python:3.10.5
         auth:
-          username: user
-          password: password
+          username: $user
+          password: $password
 
 jobs:
   build:
@@ -68,8 +68,8 @@ jobs:
       - heroku/install
       # Deploy app to Heroku
       - heroku/deploy-via-git:
-          app-name: APP_NAME
-          api-key: API_KEY
+          app-name: $APP_NAME
+          api-key: $API_KEY
 
 workflows:
   main:
@@ -82,7 +82,7 @@ workflows:
           requires:
             - build
       - docker/publish:
-          image: image_name
+          image: $image_name
           requires:
             - build
             - test
