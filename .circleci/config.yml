@@ -41,9 +41,9 @@ jobs:
         image_name: lapinator1593/oc-learning
       docker: 
         — image: cimg/python:3.10.1
-          auth:
-            username: user
-            password: password
+        auth:
+          username: user
+          password: password
       filters:
         branches:
         only: main
