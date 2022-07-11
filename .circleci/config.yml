@@ -47,6 +47,7 @@ jobs:
 
   docker-publish:
     executor: docker-publisher
+
     steps:
       - checkout
       - setup_remote_docker
@@ -56,9 +57,9 @@ jobs:
             echo "password" | docker login -u "user" --password-stdin
             docker build -t image_name .
             docker push image_name:latest
-      filters:
-        branches:
-        only: main
+      - filters:
+          branches:
+          only: main
     
 
   deploy:
