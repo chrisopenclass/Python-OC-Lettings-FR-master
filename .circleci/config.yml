@@ -55,7 +55,7 @@ jobs:
           command: |
             echo password | docker login -u user --password-stdin
             docker build -t ${IMAGE_NAME} .
-            docker push lapinator1593/oc-learning:latest
+            docker push $IMAGE_name:latest
       - filters:
           branches:
           only: main
