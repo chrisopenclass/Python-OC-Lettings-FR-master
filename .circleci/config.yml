@@ -82,6 +82,8 @@ workflows:
           requires:
             - build
       - docker/publish:
+          docker-username: user
+          docker-password: password
           image: $image_name
           requires:
             - build
