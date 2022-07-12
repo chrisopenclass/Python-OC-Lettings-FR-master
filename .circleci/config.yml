@@ -82,7 +82,6 @@ workflows:
           requires:
             - build
       - docker/publish:
-          path: lapinator1593/oc-learning
           docker-username: user
           docker-password: password
           image: $image_name
