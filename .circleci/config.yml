@@ -55,7 +55,7 @@ jobs:
           command: |
             echo password | docker login -u user --password-stdin
             docker build -t ${image_name} .
-            docker push test:latest
+            docker image push test:latest
       - filters:
           branches:
           only: main
