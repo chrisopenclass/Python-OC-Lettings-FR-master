@@ -13,7 +13,7 @@ orbs:
 executors:
   docker-publisher:
     environment:
-      image_name: lapinator1593/oc-learning
+      IMAGE_NAME: lapinator1593/oc-learning
     docker: 
       - image: cimg/python:3.10.5
         auth:
@@ -54,8 +54,8 @@ jobs:
           name: publish to dockerhub
           command: |
             echo password | docker login -u user --password-stdin
-            docker build -t ${image_name} .
-            docker image push test:latest
+            docker build -t $IMAGE_NAME .
+            docker push $IMAGE_NAME:latest
       - filters:
           branches:
           only: main
@@ -84,7 +84,7 @@ workflows:
       - docker/publish:
           docker-username: user
           docker-password: password
-          image: image_name
+          image: IMAGE_NAME
           requires:
             - build
             - test
