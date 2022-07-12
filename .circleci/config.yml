@@ -84,7 +84,7 @@ workflows:
       - docker/publish:
           docker-username: user
           docker-password: password
-          image: IMAGE_NAME
+          image: $IMAGE_NAME
           requires:
             - build
             - test
