@@ -55,6 +55,9 @@ jobs:
           command: |
             echo password | docker login -u user --password-stdin
             docker build --cache-from=app -t $IMAGE_NAME .
+            mkdir -p /caches
+            /caches/app.tar
+            docker save -o /caches/app.tar app
             docker push $IMAGE_NAME:latest
       - filters:
           branches:
