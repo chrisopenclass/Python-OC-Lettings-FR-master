@@ -65,6 +65,7 @@ jobs:
       # replace with your preferred image
       - image: cimg/python:3.10.5
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: Deploy to Heroku
