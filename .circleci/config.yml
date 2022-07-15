@@ -60,7 +60,7 @@ jobs:
           branches:
           only: main
 
-  deploy-to-heroku:
+  deploy:
     steps:
       - checkout
       - run:
@@ -86,7 +86,7 @@ workflows:
           image: $IMAGE_NAME
           requires:
             - lint
-      - deploy-to-heroku:
+      - deploy:
           requires:
             - docker/publish
           filters:
