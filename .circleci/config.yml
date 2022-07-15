@@ -60,16 +60,13 @@ jobs:
           branches:
           only: main
 
-  deploy:
-    executor: heroku/default
-    steps:
-      - checkout
-      # Install Heroku if not already installed
-      - heroku/install
-      # Deploy app to Heroku
-      - heroku/deploy-via-git:
-          app-name: APP_NAME
-          api-key: API_KEY
+  deploy-to-heroku:
+    - run:
+      name: Deploy to Heroku
+      command: |
+        docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+        docker tag $IMAGE_name:latest registry.heroku.com/$HEROKU_APP_NAME/web
+        docker push registry.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
   main:
@@ -80,16 +77,14 @@ workflows:
             - build
       - lint:
           requires:
-            - build
+            - test
       - docker/publish:
           docker-username: user
           docker-password: password
           image: $IMAGE_NAME
           requires:
-            - build
-            - test
             - lint
-      - deploy:
+      - deploy-to-heroku:
           requires:
             - docker/publish
           filters:
