@@ -55,14 +55,13 @@ jobs:
           command: |
             echo password | docker login -u user --password-stdin
             docker build -t $IMAGE_NAME .
-            docker push $IMAGE_name:latest
+            docker push $IMAGE_NAME:latest
       - filters:
           branches:
           only: main
 
   deploy:
     docker:
-      # replace with your preferred image
       - image: cimg/python:3.10.5
     steps:
       - setup_remote_docker
