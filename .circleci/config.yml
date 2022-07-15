@@ -54,7 +54,7 @@ jobs:
           name: publish to dockerhub
           command: |
             echo password | docker login -u user --password-stdin
-            docker build -t $IMAGE_NAME .
+            docker build --cache-from=app -t $IMAGE_NAME .
             docker push $IMAGE_NAME:latest
       - filters:
           branches:
@@ -70,7 +70,7 @@ jobs:
           name: Deploy to Heroku
           command: |
             docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-            docker tag lapinator1593/oc-learning:latest registry.heroku.com/$HEROKU_APP_NAME/web
+            docker tag lapinator1593/oc-learning:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
