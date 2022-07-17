@@ -60,18 +60,35 @@ jobs:
           only: main
 
   deploy:
-    docker:
-      - image: cimg/python:3.10.5
+    machine: True
     steps:
-      - setup_remote_docker
       - checkout
       - run:
-          name: Deploy to Heroku
+          name: Install Heroku 
           command: |
-            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+            set -e
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku config:set SECRET_KEY=$SECRET_KEY -a $HEROKU_APP_NAME
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku config:set DEBUG=$DEBUG -a $HEROKU_APP_NAME
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku config:set SENTRY_DSN=$SENTRY_DSN -a $HEROKU_APP_NAME
+      - run:
+          name: Pulling container from Dockerhub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker pull $IMAGE_NAME:$CIRCLE_SHA1
-            docker tag lapinator1593/oc-learning:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
+      
+      - run:
+          name: Pushing container to Heroku
+          command: |
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
+      
+      - run:
+          name: Releasing container
+          command: |          
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release web -a $HEROKU_APP_NAME
+
 
 workflows:
   main:
