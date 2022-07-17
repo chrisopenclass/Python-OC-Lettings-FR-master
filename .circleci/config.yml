@@ -60,7 +60,7 @@ jobs:
           only: main
 
   deploy:
-    jobs:
+    steps:
       - heroku/deploy-via-git
 
 workflows:
