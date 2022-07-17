@@ -17,8 +17,8 @@ executors:
     docker: 
       - image: cimg/python:3.10.5
         auth:
-          username: $DOCKER_HUB_USERNAME
-          password: $DOCKER_HUB_PASSWORD
+          username: DOCKER_HUB_USERNAME
+          password: DOCKER_HUB_PASSWORD
 
 jobs:
   build:
@@ -84,8 +84,8 @@ workflows:
           requires:
             - test
       - docker/publish:
-          docker-username: $DOCKER_HUB_USERNAME
-          docker-password: $DOCKER_HUB_PASSWORD
+          docker-username: DOCKER_HUB_USERNAME
+          docker-password: DOCKER_HUB_PASSWORD
           image: $IMAGE_NAME
           requires:
             - lint
