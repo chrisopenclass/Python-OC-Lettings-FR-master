@@ -53,7 +53,7 @@ jobs:
       - run:
           name: publish to dockerhub
           command: |
-            echo DOCKER_HUB_PASSWORD | docker login -u DOCKER_HUB_USERNAME --password-stdin
+            echo "DOCKER_HUB_PASSWORD" | docker login -u "DOCKER_HUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
       - filters:
           branches:
