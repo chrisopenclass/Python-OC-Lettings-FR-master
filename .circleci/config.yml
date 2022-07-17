@@ -65,6 +65,7 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - heroku/install
       - run:
           name: Deploy to Heroku
           command: |
