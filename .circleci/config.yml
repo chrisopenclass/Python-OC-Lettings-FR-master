@@ -72,7 +72,7 @@ jobs:
       - run:
           name: Pulling container from Dockerhub
           command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker login -u user -p password
             docker pull $IMAGE_NAME:$CIRCLE_SHA1
       
       - run:
