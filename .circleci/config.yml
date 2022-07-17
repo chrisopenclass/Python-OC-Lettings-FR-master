@@ -78,14 +78,14 @@ jobs:
       - run:
           name: Pushing container to Heroku
           command: |
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+            HEROKU_API_KEY=HEROKU_API_KEY heroku container:login
             docker tag $IMAGE_NAME:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
       
       - run:
           name: Releasing container
           command: |          
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release web -a $HEROKU_APP_NAME
+            HEROKU_API_KEY=HEROKU_API_KEY heroku container:release web -a $HEROKU_APP_NAME
 
 
 workflows:
