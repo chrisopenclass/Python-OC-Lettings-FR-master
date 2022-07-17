@@ -71,6 +71,7 @@ jobs:
             docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
             docker pull $IMAGE_NAME:$CIRCLE_SHA1
             docker tag lapinator1593/oc-learning:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
+            heroku container:login
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
