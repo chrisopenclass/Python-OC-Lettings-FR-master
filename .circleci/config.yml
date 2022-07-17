@@ -58,10 +58,7 @@ jobs:
       - filters:
           branches:
           only: main
-
-  deploy:
-    steps:
-      - heroku/deploy-via-git
+   
 
 workflows:
   main:
@@ -79,9 +76,4 @@ workflows:
           image: $IMAGE_NAME
           requires:
             - lint
-      - deploy:
-          requires:
-            - docker/publish
-          filters:
-            branches:
-              only: main
+      - heroku/deploy-via-git
