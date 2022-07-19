@@ -44,8 +44,10 @@ def create_letting(title, address):
     return Letting.objects.create(title=title, address=address)
 
 
-def test_index_view(self):
-    url = reverse('lettings:lettings_index')
-    response = self.client.get(url)
-    self.assertEqual(response.status_code, 200)
-    self.assertIn(b"<title>Lettings</title>", response.content)
+class ViewTests(TestCase):
+
+    def test_index_view(self):
+        url = reverse('lettings:lettings_index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"<title>Lettings</title>", response.content)
