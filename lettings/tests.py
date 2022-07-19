@@ -1,7 +1,6 @@
 import pytest
 from django.urls import reverse, resolve
 from lettings.models import Address, Letting
-from django.test import TestCase
 
 
 @pytest.mark.django_db
