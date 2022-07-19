@@ -47,7 +47,7 @@ def create_letting(title, address):
 class ViewTests(TestCase):
 
     def test_index_view(self):
-        url = reverse('lettings:lettings_index')
+        url = reverse('letting:lettings_index')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"<title>Lettings</title>", response.content)
+        self.assertIn(b"<title>Letting</title>", response.content)
