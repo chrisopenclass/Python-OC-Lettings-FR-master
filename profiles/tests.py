@@ -1,25 +1,34 @@
-import pytest
-
-from django.urls import reverse, resolve
-from profiles.models import Profile
+from django.test import TestCase
+from django.urls import reverse
 from django.contrib.auth.models import User
+from .models import Profile
 
 
-@pytest.mark.django_db
-def test_Address_list_url():
-    path = reverse('profiles_index')
+def create_user(username):
+    """Creating a test user"""
+    user = User.objects.create(username=username)
+    user.set_password('Securedpassword0123')
+    return user
 
-    assert path == '/profiles/'
-    assert resolve(path).view_name == 'profiles_index'
+
+def create_profile(user, favorite_city):
+    """Creating a test profile"""
+    return Profile.objects.create(user=user, favorite_city=favorite_city)
 
 
-@pytest.mark.django_db
-def test_profile_retrieve_url():
-    user = User.objects.create(username='test', password='securedpassword')
+class ViewTests(TestCase):
 
-    profile = Profile.objects.create(user=user, favorite_city='citronville')
+    def test_index_view(self):
+        url = reverse('profiles_index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"<title>Profiles</title>", response.content)
 
-    path = reverse('profile', kwargs={'username': profile.user.username})
-
-    assert path == '/profiles/test/'
-    assert resolve(path).view_name == 'profile'
+    def test_letting_view(self):
+        user = create_user(username='test')
+        profile = create_profile(user=user, favorite_city='test city')
+        url = reverse('profile', args=(user.username,))
+        response = self.client.get(url)
+        title = "<title>{}</title>".format(profile.user.username)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(title.encode('utf-8'), response.content)
