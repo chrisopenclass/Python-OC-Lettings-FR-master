@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse, resolve
 from lettings.models import Address, Letting
+from django.test import TestCase
 
 
 @pytest.mark.django_db
@@ -41,3 +42,12 @@ def create_address(number, street, city, state, zip_code, country_iso_code):
 def create_letting(title, address):
     """Creating a test letting"""
     return Letting.objects.create(title=title, address=address)
+
+
+class ViewTests(TestCase):
+
+    def test_index_view(self):
+        url = reverse('lettings_index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"<title>Lettings</title>", response.content)
